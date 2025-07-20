@@ -1,70 +1,45 @@
-# Getting Started with Create React App
+### Введение
+Здесь будет записана теоритическая часть и возможно некоторые более подробные объяснения для кода, если я посчитаю нужным развернутость вместо обычных комментариев в файлах.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# React
+Реакт спроектирован таким образом что он независим от браузера. Он живет сам по себе и служит для создания пользовательских интерфейсов. А за визуализацию, за рендеринг и за отрисовку реакт компонентов в браузер отвечает библиотека **React DOM**. Благодаря такой реализации Реакта мы можем им также создавать приложения на android ios windows используя **React Native**. Т.об. ядро реакт (*React CORE*) большое кол-во концепций, а за визуал в том или ином окружении отвечают другие библиотеки.
+![](./readme-pics/react-libraries.png) 
 
-## Available Scripts
+## SPA (Single Page Application)
+Возьмем работу классических клиентских приложених, это **Multi Page Application**: тут мы создаем несколько хтмл файлов в качестве страниц, у каждого подключены свои какие то скрипты, и между страницами мы переключаемся с помощью специальных ссылок. Из минусов при переходе на новую страницу нам приходится полностью загружать новый хтмл файл, при этом некоторые части (нав панель, футеры, боковые панели) остаются прежними но мы их снова загружаем; если не оптимизировать грамотно приложение, пользователь будет видеть все эти переходы и загрузки заново особенно при плохом интернете.
 
-In the project directory, you can run:
+В то время **SPA** - одностраничные приложения которые реакт нам позволяет разробатывать - всегда имеет один основной хтмл. Он минималистичный, имеет ток какие то мета теги и основные теги типа бади хеда, подключенные скрипты. Все данные приходят из джаваскрипта. Содержимым страницы мы можем управлять как хотим. Из плюсов: быстрая работа, все скрипты мы подключили единожды, нав панели и футеры переподгружать не надо. Из минусов: первичная загрузка будет гораздо больше т.к. нам надо подгрузить намного больше данных изначально, зато потом все будет работать как по маслу. Ну и это тоже можно оптимизировать на самом деле используя WebPack, Lazy Loading и различные хитрости.
 
-### `npm start`
+## Компонентный подход
+...
+При таком подходе всегда есть какой то корневой компонент который вмонтируется в индекс хтмл файл. Чаще всего в контексте реакт он называется **_App.js/ts_**
+![](./readme-pics/components-method.png).
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## DOM дерево
+Когда работаешь напрямую с дом деревом это тратит много сил раздумывая над тем что куда поместить где удалить. Плюс все операции над дом деревом очень ресурсоемкие и тяжелые. 
+Реакт же позволяет больше состредотачиваться на логике по работе с данными и при это самостоятельное взаимодействие с DOM деревом минимизировано. Реакт сам следит за обновлением интерфейса. Мы меняем данные - интерфейс под эти данные подстраивается. Причем за этим стоят достаточно сложные оптимизированные механизмы, такие как Согласование, React Fiber, render() функция.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+React под капотом строит т.н. виртуальное дом дерево (**Virtual DOM**) - **более легковесная копия обычного дом дерева в браузере**. _(такое название часто используется и документируется, хотя логически может вызывать путаницу, поскольку дом дерево все же подразумевает браузер, а это дерево строится вне зависимости от окружения в котором выполняется код, поэтому сами разрабы предпочитают название <u>Дерево Реакт Элементов</u>, т.к. оно строится не только в браузере, и Виртуал ДОМ не самое подходящее название)._
+Когда в каких то узлах этого дерева произошли какие то изменения, они не переносятся в ДОМ дерево сразу. Вместо этого Реакт строит новое дерево элементов с обновленными значениями и сравнивает это дерево с предыдущим. Это стадия **Согласования (Reconciliation)**, за него отвечает ядро Реакта, и оно выполняется вне зависимости от среды выполнения, будь то браузер или телефон.
+После того как Реакт нашел разницу между этими двумя деревьями, происходит фаза **рендеринга/отрисовки (render)**, при этом для каждого изменения Реакт устанавливает свою приоритетность, и мы видим плавную картинку с максимальной частотой кадров. За эту фазу отвечает React DOM, React Native.
+ ![](./readme-pics/phases.png)
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## JSX (JavaScript XML)
+**JSX** является расширение Джаваскрипта и упрощает написание кода.
+Тут в примере Джаваскрипт кода мы создаем новый Реакт элемент, указываем тип элемента div, в него кладем еще один новый элемент button, вторым параметром можем передать опции, например disabled, третим хз что. 
+![](./readme-pics/JSX-example.png)
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Мой код
+Тут будут все заметки и примечания связанные с кодом и Реактом.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Двустороннее связывание
+Пример:
+```jsx
+<h1>{value}</h1>
+<input type="text" value={value} onChange={e => setValue(e.target.value)} />
+```
+То есть мы связали состояние со значением которое находится в Инпуте. Если бы мы его не связали, у нас бы была просто статичная переменна в атрибуте value, и что либо писать в Инпуте было бы невозможно.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Такие компоненты называются **управляемыми**, так как мы всегда можем изменить значение компонента изменив состояние.
