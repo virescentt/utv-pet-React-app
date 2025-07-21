@@ -1,28 +1,50 @@
 import React, { useState } from "react";
+import Counter from "./components/Counter";
+import ClassCounter from "./components/ClassCounter";
+import "./styles/App.css";
+import PostItem from "./components/PostItem";
+import PostList from "./components/PostList";
+import MyButton from "./components/UI/button/MyButton";
+import MyInput from "./components/UI/input/MyInput";
 
 function App() {
-  const [likes, setLikes] = useState(0);
-  const [value, setValue] = useState("some text in an input");
+  const [posts, setPosts] = useState([
+    { id: 1, title: "Javascript", body: "Descrpition" },
+    { id: 2, title: "Javascript 2", body: "Descrpition" },
+    { id: 3, title: "Javascript 3", body: "Descrpition" },
+  ]);
 
-  function increment() {
-    setLikes(likes + 1);
-  }
+  const [title, setTitle] = useState("");
+  const [post, setPost] = useState({title: "", body: ""});
+  
 
-  function decrement() {
-    setLikes(likes - 1);
-  }
+  const addNewPost = (e) => {
+    e.preventDefault();
+    setPosts((prev) => [...prev, {...post, id: Date.now()}]);
 
+    setPost({title: "", body: ""})
+    
+  };
   return (
     <div className="App">
-      <h1>{likes}</h1>
-      <h1>{value}</h1>
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-      />
-      <button onClick={increment}>Increment</button>
-      <button onClick={decrement}>Decrement</button>
+      <form>
+        {/* Управляемый копмонент после его двустороннего связывания */}
+        <MyInput
+          type="text"
+          value={post.title}
+          onChange={(e) => setPost({...post, title: e.target.value})}
+          placeholder="Название поста"
+        />
+        <MyInput
+          type="text"
+          value={post.body}
+          onChange={(e) => setPost({...post, body: e.target.value})}
+          placeholder="Описание поста"
+        />
+        {/* так просто передавать и получать пропсы можно только с булевыми пропсами, типа disabled, required, checked... */}
+        <MyButton onClick={addNewPost}>Создать пост</MyButton>
+      </form>
+      <PostList posts={posts} title={"Список постов 1"} />
     </div>
   );
 }
