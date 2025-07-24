@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import Counter from "./components/Counter";
 import ClassCounter from "./components/ClassCounter";
 import "./styles/App.css";
@@ -8,6 +8,7 @@ import MyButton from "./components/UI/button/MyButton";
 import MyInput from "./components/UI/input/MyInput";
 import PostForm from "./components/PostForm";
 import MySelect from "./components/UI/select/MySelect";
+import PostFilter from "./components/PostFilter";
 
 function App() {
   const [posts, setPosts] = useState([
@@ -16,19 +17,26 @@ function App() {
     { id: 3, title: "xlms,asd", body: "09823i" },
   ]);
 
-  const [selectedSort, setSelectedSort] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [filter, setFilter] = useState({
+    sort: "",
+    query: "",
+  });
 
-  function getSortedPosts() {
+  const sortedPosts = useMemo(() => {
     console.log("Функция отработала  ");
-    if (selectedSort) {
-      [...posts].sort((a, b) => a[selectedSort].localeCompare(selectedSort));
+
+    // просто механизм сортировки
+    if (filter.sort) {
+      [...posts].sort((a, b) => a[filter.sort].localeCompare(filter.sort));
     }
     return posts;
-  }
+  }, [filter.sort, posts]);
 
-  // просто механизм сортировки
-  const sortedPosts = getSortedPosts();
+  const sortedAndSearchedPosts = useMemo(() => {
+    return sortedPosts.filter((post) =>
+      post.title.toLocaleLowerCase().includes(filter.query)
+    );
+  }, [filter.query, sortedPosts]);
 
   function createPost(newPost) {
     setPosts([...posts, newPost]);
@@ -39,46 +47,16 @@ function App() {
     setPosts(posts.filter((p) => p.id !== post.id));
   };
 
-  const sortPosts = (sortValue) => {
-    setSelectedSort(sortValue);
-    console.log(sortValue);
-  };
-
   return (
     <div className="App">
       <PostForm create={createPost} />
       <hr style={{ margin: "15px 0" }} />
-      <div>
-        <MyInput
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          placeholder="Поиск..."
-        />
-        <MySelect
-          value={selectedSort}
-          onChange={sortPosts}
-          defaultValue="Сортировка"
-          options={[
-            { value: "title", name: "По названию" },
-            { value: "body", name: "По описанию" },
-          ]}
-        />
-        {/* <select>
-          <option disabled value="value1" key="">Сортировка</option>
-          <option value="value1" key="">По названию</option>
-          <option value="value1" key="">По описанию</option>
-        </select> */}
-      </div>
-      {/* Условная отрисовка с помощью тернарного оператора.*/}
-      {posts.length ? (
-        <PostList
-          remove={removePost}
-          posts={sortedPosts}
-          title={"Список постов 1"}
-        />
-      ) : (
-        <h1 style={{ textAlign: "center" }}>Посты не были найдены</h1>
-      )}
+      <PostFilter filter={filter} setFilter={setFilter} />
+      <PostList
+        remove={removePost}
+        posts={sortedAndSearchedPosts}
+        title={"Список постов 1"}
+      />
     </div>
   );
 }
