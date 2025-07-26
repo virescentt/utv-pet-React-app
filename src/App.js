@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Counter from "./components/Counter";
 import ClassCounter from "./components/ClassCounter";
 import "./styles/App.css";
@@ -10,39 +10,31 @@ import PostForm from "./components/PostForm";
 import MySelect from "./components/UI/select/MySelect";
 import PostFilter from "./components/PostFilter";
 import MyModal from "./components/UI/MyModal/MyModal";
+import { usePosts } from "./hooks/usePosts";
+import axios from 'axios';
+import PostService from "./API/PostService";
 
 function App() {
-  const [posts, setPosts] = useState([
-    { id: 1, title: "Javascript", body: "Descrpition" },
-    { id: 2, title: "Pauhi 2", body: "peroik" },
-    { id: 3, title: "xlms,asd", body: "09823i" },
-  ]);
-
+  const [posts, setPosts] = useState([]);
   const [filter, setFilter] = useState({
     sort: "",
     query: "",
   });
   const [modal, setModal] = useState(false);
+  const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
 
-  const sortedPosts = useMemo(() => {
-    console.log("Функция отработала  ");
-
-    // просто механизм сортировки
-    if (filter.sort) {
-      [...posts].sort((a, b) => a[filter.sort].localeCompare(filter.sort));
-    }
-    return posts;
-  }, [filter.sort, posts]);
-
-  const sortedAndSearchedPosts = useMemo(() => {
-    return sortedPosts.filter((post) =>
-      post.title.toLocaleLowerCase().includes(filter.query)
-    );
-  }, [filter.query, sortedPosts]);
+  useEffect(() => {
+    fetchPosts()
+  }, [])
 
   function createPost(newPost) {
     setPosts([...posts, newPost]);
     setModal(false)
+  }
+
+  async function fetchPosts() {
+    const posts = await PostService.getAll();
+    setPosts(posts);
   }
 
   // Получаем post из дочернего компонента
@@ -52,6 +44,7 @@ function App() {
 
   return (
     <div className="App">
+      <button onClick={fetchPosts}>GET POSTS</button>
       <MyButton style={{marginTop: '30px'}} onClick={() => setModal(true)}>
         Создать пост
       </MyButton>
