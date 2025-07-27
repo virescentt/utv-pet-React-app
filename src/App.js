@@ -15,7 +15,8 @@ import axios from 'axios';
 import PostService from "./API/PostService";
 
 function App() {
-  const [posts, setPosts] = useState([]);
+  const [posts, setPosts] = useState([
+  ]);
   const [filter, setFilter] = useState({
     sort: "",
     query: "",
@@ -23,9 +24,9 @@ function App() {
   const [modal, setModal] = useState(false);
   const sortedAndSearchedPosts = usePosts(posts, filter.sort, filter.query);
 
-  useEffect(() => {
-    fetchPosts()
-  }, [])
+  // useEffect(() => {
+  //   fetchPosts()
+  // }, [])
 
   function createPost(newPost) {
     setPosts([...posts, newPost]);
