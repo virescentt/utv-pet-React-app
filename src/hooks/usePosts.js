@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
 export const useSortedPosts = (posts, sort) => {
-  console.log("Функция sortedPosts отработала");
+  // console.log("Функция sortedPosts отработала");
   const sortedPosts = useMemo(() => {
     // просто механизм сортировки
     if (sort) {
