@@ -1,0 +1,17 @@
+.loader {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px dashed teal;
+    animation: rotate 1s infinite ease-in-out;
+}
+
+/* анимация создается с помощью ключей которые задаются через ключевое слово @keyframes `name` {...}. В нем у нас будет два ключевых кадра: начало (from) и конец (to) */
+@keyframes rotate {
+    from {
+        transform: rotate(0deg) scale(1.0);
+    }
+    to {
+        transform: rotate(360deg) scale(1.4);
+    }
+}
