@@ -10,7 +10,7 @@ export const useSortedPosts = (posts, sort) => {
     return posts;
   }, [posts, sort]);
 
-  console.log(sortedPosts);
+  // console.log(sortedPosts);
   return sortedPosts;
 };
 
@@ -23,6 +23,6 @@ export const usePosts = (posts, sort, query) => {
     );
   }, [query, sortedPosts]);
 
-  console.log(sortedAndSearchedPosts);
+  // console.log(sortedAndSearchedPosts);
   return sortedAndSearchedPosts;
 };
