@@ -4,7 +4,7 @@ import cl from './MyModal.module.css'
 const MyModal = ({children, visible, setVisible}) => {
     const rootClasses = [cl.myModal]
     if (visible) {
-        console.log(visible)
+        // console.log(visible)
         rootClasses.push(cl.active);
     }
 

@@ -1,0 +1,8 @@
+.false {
+    display: none;
+}
+
+.btn__logout {
+    border-color: red;
+    color: red;
+}
