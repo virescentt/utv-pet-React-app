@@ -299,10 +299,13 @@ _Routing V6/7 отличается от V5_. В видео указан тако
 ```jsx
 // from components/AppRouter.jsx
 <Routes>
-  <Route path="/posts/:id" element={<PostPage />} />
+  <Route index element={<Navigate to="/posts" replace />} />
 
+  <Route path="/posts" element={<Posts />} />
   <Route path="/about" element={<About />} />
+  <Route path="/posts/:id" element={<PostIdPage />} />
   <Route path="/error" element={<Error />} />
+
   <Route path="*" element={<Navigate to="/error" />} />
 </Routes>
 ```
@@ -333,6 +336,7 @@ const PostItem = (props) => {
 В React Router двоеточие в пути (`/:id`) означает **динамический сегмент маршрута**.
 
 Пример:
+
 ```jsx
 <Route path="/posts/:id" element={<PostIdPage />} />
 ```
