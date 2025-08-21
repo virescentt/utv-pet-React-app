@@ -6,3 +6,18 @@
     border-color: red;
     color: red;
 }
+
+a {
+  color: teal;
+  text-decoration: none;
+  font-weight: 500;
+  margin-right: 10px;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: rgb(3, 161, 161);
+  text-decoration: none;
+  font-weight: 500;
+  margin-right: 10px;
+}
