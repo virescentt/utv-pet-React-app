@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import PostList from "../components/PostList";
 import MyButton from "../components/UI/button/MyButton";
 import PostForm from "../components/PostForm";
@@ -10,6 +10,7 @@ import Loader from "../components/UI/Loader/Loader";
 import { useFetching } from "../hooks/useFetching";
 import MyPagination from "../components/UI/pagination/MyPagination";
 import { getPageCount } from "../utils/pages";
+import { useObserver } from "../hooks/useObserver";
 
 function Posts() {
   const [posts, setPosts] = useState([]);
@@ -22,13 +23,16 @@ function Posts() {
   const [totalPages, setTotalPages] = useState(0);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
+  const lastElement = useRef();
 
   const [fetchPosts, isPostsLoading, postError] = useFetching(async () => {
     const response = await PostService.getAll(limit, page);
-    setPosts(response.data);
+    setPosts([...posts, ...response.data]);
     const totalCount = response.headers["x-total-count"];
     setTotalPages(getPageCount(totalCount, limit));
   });
+
+  useObserver(lastElement, page < totalPages, isPostsLoading, () => { setPage(page + 1) })
 
   useEffect(() => {
     fetchPosts();
@@ -63,26 +67,25 @@ function Posts() {
       <hr style={{ margin: "15px 0" }} />
       <PostFilter filter={filter} setFilter={setFilter} />
       {postError && <h1>Произошла ошибка ${postError}</h1>}
-      {isPostsLoading ? (
+
+      <PostList
+        remove={removePost}
+        posts={sortedAndSearchedPosts}
+        title={`Список постов ${page}`}
+      />
+      {isPostsLoading && (
         <div
           style={{ display: "flex", justifyContent: "center", marginTop: 50 }}
         >
           <Loader />
         </div>
-      ) : (
-        <>
-          <PostList
-            remove={removePost}
-            posts={sortedAndSearchedPosts}
-            title={`Список постов ${page}`}
-          />
-          <MyPagination
-            totalPages={totalPages}
-            page={page}
-            changePage={changePage}
-          />
-        </>
       )}
+      <div ref={lastElement} style={{ height: 20, background: "red" }} />
+      <MyPagination
+        totalPages={totalPages}
+        page={page}
+        changePage={changePage}
+      />
     </div>
   );
 }
