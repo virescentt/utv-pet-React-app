@@ -29,39 +29,32 @@ const PostIdPage = () => {
   return (
     <div>
       <h1>Вы открыли страницу с ID {params.id}, поздравляю.</h1>
-      {error && (
+      {(error || comError) ? (
         <>
           <br />
-          <p>Произошла ошибка ${error}</p>
+          <p>Произошла ошибка загрузки контента: {error}</p>
+          <p>Произошла ошибка загрузки комментариев: {comError}</p>
           <br />
         </>
-      )}
-      {isLoading ? (
-        <Loader />
       ) : (
-        <div>
-          {post.id}. {post.title}
-        </div>
-      )}
-      <h2>Комментарии.</h2>
-      {comError && (
-        <>
-          <br />
-          <p>Произошла ошибка ${comError}</p>
-          <br />
-        </>
-      )}
-      {isComLoading ? (
-        <Loader />
-      ) : (
-        <div>
-          {comms.map((com) => (
-            <div style={{ marginTop: 15 }} key={com.id}>
-              <h5>email: {com.email}</h5>
-              <div>body: {com.body}</div>
-            </div>
-          ))}
-        </div>
+        (isLoading || isComLoading) ? (
+          <Loader />
+        ) : (
+          <>
+          <div>
+            {post.id}. {post.title}
+          </div>
+          <h2>Комментарии</h2>
+          <div>
+            {comms.map((com) => (
+              <div style={{ marginTop: 15 }} key={com.id}>
+                <h5>email: {com.email}</h5>
+                <div>body: {com.body}</div>
+              </div>
+            ))}
+          </div>
+          </>
+        )
       )}
     </div>
   );
