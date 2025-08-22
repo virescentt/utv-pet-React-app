@@ -91,7 +91,8 @@ function Posts() {
           <Loader />
         </div>
       )}
-      <div ref={lastElement} style={{ height: 20, background: "red" }} />
+      {/* style={{ height: 20, background: "red" }} */}
+      <div ref={lastElement}  />
       <MyPagination
         totalPages={totalPages}
         page={page}
